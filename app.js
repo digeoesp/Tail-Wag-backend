@@ -44,13 +44,12 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
     } 
 })
 .then((response)=>{                    
-    console.log(response.data);
     const  { token_type, access_token } = response.data;
     axios.get(`https://api.petfinder.com/v2/animals/`, {
         headers: { Authorization: `${token_type} ${access_token}`}
     })
     .then(response =>  {
-        console.log(response.data);
+        res.json(response.data)
     })
     .catch(error => console.log(error))
 })
@@ -63,7 +62,7 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
 const server = app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
 
 module.exports = server;
-sSs qsqs
+
 
 
 
