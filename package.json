@@ -14,7 +14,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
-    "buff": "^1.0.0",
+    "buff": "^0.1.0",
     "buffer": "^6.0.3",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
