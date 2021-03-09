@@ -1,23 +1,23 @@
+// Seed Database
+const axios = require('axios');
 const db = require('./models');
-
-const examples = [
-  { name: 'Example 1', completed: true}, 
-  { body: 'Example 2', completed: false}
-];
-const oneExample = { name: 'Example 3', completed: true };
-
-const addManyExamples = async () => {
-  const savedExamples = await db.Example.insertMany(examples);
-  console.log('=======> Saved Examples.');
-  console.log(savedExamples);
+const addPets = async () => {
+    const response = await axios.get('https://api.petfinder.com/v2/animals/');
+    const data = response.data; // array of objects [{}, {}, {}]
+    const newPets = await data.map((petObject) => {
+        const { name, type, species, gender, age } = petObject; // destructuring
+        const resultObj = {
+            name: name,
+            type: type,
+            species: species,
+            gender: gender,
+            age: age
+        }
+        return resultObj;
+    });
+    // Add newCapsules to DB
+    const allNewPets = await db.Pet.create(newPets);
 }
-
-const addOneExample = async () => {
-  const savedOneExample = await db.Example.create(oneExample);
-  console.log('=======> Saved One Example.');
-  console.log(savedOneExample);
-}
-
-// run the functions
-addManyExamples();
-addOneExample();
+// run function
+addPets();
+// Do the same thing if you want to seed other collections (using models)

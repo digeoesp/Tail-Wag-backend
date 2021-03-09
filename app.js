@@ -5,6 +5,10 @@ const routes = require('./routes');
 const cors = require('cors');
 const passport = require('passport')
 require('./config/passport')(passport);
+const axios = require('axios');
+const querystring = require('querystring');
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 // App Set up
 const app = express();
@@ -16,6 +20,8 @@ app.use(express.json()); // JSON parsing
 app.use(cors()); // allow all CORS requests
 app.use(passport.initialize());
 
+
+
 // API Routes
 app.get('/api/', (req, res) => {
   res.json({ name: 'MERN Auth API', greeting: 'Welcome to the our API', author: 'YOU', message: "Smile, you are being watched by the Backend Engineering Team" });
@@ -23,9 +29,80 @@ app.get('/api/', (req, res) => {
 
 app.use('/api/examples', routes.example);
 app.use('/api/users', routes.user);
+app.use('/api/pets', routes.pet);
+
+app.get('/fetch-pets', async (req, res) => {
+  let buff = new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`);
+let authKey = buff.toString('base64');// changes key to string
+axios.post('https://api.petfinder.com/v2/oauth2/token', 
+    querystring.stringify({
+        grant_type: 'client_credentials',
+    }), 
+    {
+    headers: {
+        Authorization: `Basic ${authKey}`
+    } 
+})
+.then((response)=>{                    
+    console.log(response.data);
+    const  { token_type, access_token } = response.data;
+    axios.get(`https://api.petfinder.com/v2/animals/`, {
+        headers: { Authorization: `${token_type} ${access_token}`}
+    })
+    .then(response =>  {
+        console.log(response.data);
+    })
+    .catch(error => console.log(error))
+})
+.catch(error => console.log(error));
+
+})
 
 
 // Server
 const server = app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
 
 module.exports = server;
+sSs qsqs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
