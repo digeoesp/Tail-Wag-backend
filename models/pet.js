@@ -7,11 +7,15 @@ const petSchema = new Schema({
     species: String,
     gender: String,
     age: String,
-    //email: String
-    // contact: {
-    //     email: String,
-    //     phone: String
-    // }
+    photos: [ {medium:String, large: String}],
+    contact: [{ 
+        email:String, 
+        phone: String, 
+        address: {adress1: String,
+        city: String,
+        state: String,
+        postcode: String,
+        country: String}}]
 });
 
 const Pet = mongoose.model('Pet', petSchema);
