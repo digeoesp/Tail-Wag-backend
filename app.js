@@ -56,15 +56,17 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
     .then(async response =>  {
 // run function
       //add each objects information
-     
+     console.log("********", response.data)
       const newPets = await response.data.animals.map((animalObject) => {
-        const { name, type, species, gender, age } = animalObject;
+        const { name, type, species, gender, age, photos, contact } = animalObject;
        const resultObj = {
           name: name,
           type: type,
           species: species,
           gender: gender,
-          age: age
+          age: age,
+          photos: photos,
+          contact: contact
         
       }
       return resultObj
