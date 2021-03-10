@@ -7,6 +7,10 @@ const passport = require('passport')
 require('./config/passport')(passport);
 const axios = require('axios');
 const querystring = require('querystring');
+const db = require('./models');
+const { type } = require('os');
+
+
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
@@ -22,6 +26,7 @@ app.use(passport.initialize());
 
 
 
+
 // API Routes
 app.get('/api/', (req, res) => {
   res.json({ name: 'MERN Auth API', greeting: 'Welcome to the our API', author: 'YOU', message: "Smile, you are being watched by the Backend Engineering Team" });
@@ -31,7 +36,7 @@ app.use('/api/examples', routes.example);
 app.use('/api/users', routes.user);
 app.use('/api/pets', routes.pet);
 
-app.get('/fetch-pets', async (req, res) => {
+app.get('/api/fetch-pets', async (req, res) => {
   let buff = new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`);
 let authKey = buff.toString('base64');// changes key to string
 axios.post('https://api.petfinder.com/v2/oauth2/token', 
@@ -44,19 +49,37 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
     } 
 })
 .then((response)=>{                    
-    console.log(response.data);
     const  { token_type, access_token } = response.data;
     axios.get(`https://api.petfinder.com/v2/animals/`, {
         headers: { Authorization: `${token_type} ${access_token}`}
     })
-    .then(response =>  {
-        console.log(response.data);
+    .then(async response =>  {
+// run function
+      //add each objects information
+     
+      const newPets = await response.data.animals.map((animalObject) => {
+        const { name, type, species, gender, age } = animalObject;
+       const resultObj = {
+          name: name,
+          type: type,
+          species: species,
+          gender: gender,
+          age: age
+        
+      }
+      return resultObj
+    });
+      const allNewPets = await db.Pet.create(newPets);
+      console.log(allNewPets)
+      res.send(allNewPets)
+          //email: response.animals.contact.email
     })
     .catch(error => console.log(error))
 })
 .catch(error => console.log(error));
 
 })
+
 
 
 // Server
