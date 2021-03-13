@@ -50,7 +50,8 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
 })
 .then((response)=>{                    
     const  { token_type, access_token } = response.data;
-    axios.get(`https://api.petfinder.com/v2/animals/`, {
+    const userInput =req.body.input
+    axios.get(`https://api.petfinder.com/v2/animals`, {
         headers: { Authorization: `${token_type} ${access_token}`}
     })
     .then(async response =>  {
@@ -81,6 +82,57 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
 .catch(error => console.log(error));
 
 })
+
+app.post('/api/search', async (req, res) => {
+  console.log('I am here')
+  let buff = new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`);
+  console.log(req.body, 'this is my body')
+  const {type, postalcode} = req.body
+let authKey = buff.toString('base64');// changes key to string
+axios.post(`https://api.petfinder.com/v2/oauth2/token`, 
+    querystring.stringify({
+        grant_type: 'client_credentials',
+    }),
+    {
+    headers: {
+        Authorization: `Basic ${authKey}`
+    } 
+})
+.then((response)=>{                    
+    const  { token_type, access_token } = response.data;
+    axios.get(`https://api.petfinder.com/v2/animals/?type=${type}&&location=${postalcode}`, {
+        headers: { Authorization: `${token_type} ${access_token}`}
+    })
+    .then(async response =>  {
+// run function
+      //add each objects information
+     
+      const newPets = await response.data.animals.map((animalObject) => {
+        const { name, type, species, gender, age, photos, contact } = animalObject;
+       const resultObj = {
+          name: name,
+          type: type,
+          species: species,
+          gender: gender,
+          age: age,
+          photos: photos,
+          contact: contact
+        
+      }
+      return resultObj
+    });
+      const allNewPets = await db.Pet.create(newPets);
+      
+      res.send(allNewPets)
+          //email: response.animals.contact.email
+    })
+    .catch(error => console.log(error))
+})
+.catch(error => console.log(error));
+
+})
+
+
 
 
 
