@@ -2,7 +2,7 @@ const db = require('../models');
 
 const index = (req, res) => {
     // Purpose: Fetch all examples from DB and return
-    console.log('=====> Inside GET /examples');
+    // console.log('=====> Inside GET /examples');
 
     db.Example.find({}, (err, foundExamples) => {
         if (err) console.log('Error in example#index:', err);
@@ -12,9 +12,9 @@ const index = (req, res) => {
 
 const show = (req, res) => {
     // Purpose: Fetch one example from DB and return
-    console.log('=====> Inside GET /examples/:id');
-    console.log('=====> req.params');
-    console.log(req.params); // object used for finding example by id
+    // console.log('=====> Inside GET /examples/:id');
+    // console.log('=====> req.params');
+    // console.log(req.params); // object used for finding example by id
 
     db.Example.findById(req.params.id, (err, foundExample) => {
         if (err) console.log('Error in example#show:', err);
@@ -24,9 +24,9 @@ const show = (req, res) => {
 
 const create = (req, res) => {
     // Purpose: Create one example by adding body to DB, and return
-    console.log('=====> Inside POST /examples');
-    console.log('=====> req.body');
-    console.log(req.body); // object used for creating new example
+    // console.log('=====> Inside POST /examples');
+    // console.log('=====> req.body');
+    // console.log(req.body); // object used for creating new example
 
     db.Example.create(req.body, (err, savedExample) => {
         if (err) console.log('Error in example#create:', err);
@@ -36,11 +36,11 @@ const create = (req, res) => {
 
 const update = (req, res) => {
     // Purpose: Update one example in the DB, and return
-    console.log('=====> Inside PUT /examples/:id');
-    console.log('=====> req.params');
-    console.log(req.params); // object used for finding example by id
-    console.log('=====> req.body');
-    console.log(req.body); // object used for updating example
+    // console.log('=====> Inside PUT /examples/:id');
+    // console.log('=====> req.params');
+    // console.log(req.params); // object used for finding example by id
+    // console.log('=====> req.body');
+    // console.log(req.body); // object used for updating example
 
     db.Example.findByIdAndUpdate(req.params.id, req.body, { new: true }, (err, updatedExample) => {
         if (err) console.log('Error in example#update:', err);
@@ -50,14 +50,14 @@ const update = (req, res) => {
 
 const destroy = (req, res) => {
     // Purpose: Update one example in the DB, and return
-    console.log('=====> Inside DELETE /examples/:id');
-    console.log('=====> req.params');
-    console.log(req.params); // object used for finding example by id
+    // console.log('=====> Inside DELETE /examples/:id');
+    // console.log('=====> req.params');
+    // console.log(req.params); // object used for finding example by id
     
     db.Example.findByIdAndDelete(req.params.id, (err, deletedExample) => {
         if (err) console.log('Error in example#destroy:', err);
           res.sendStatus(200);
-          console.log(deletedExample);
+        //   console.log(deletedExample);
     });
 };
 

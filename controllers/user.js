@@ -7,7 +7,7 @@ const {JWT_SECRET} = process.env;
 
 
 const db = require('../models');
-const { User } = require('../models');
+
 
 const test = (req, res) => {
     res.json({ message: 'User endpoint OK!'})
@@ -17,9 +17,9 @@ const test = (req, res) => {
 //POST ROUTE
 const register = ( req, res) =>{
     //POST ADDING NEW USER TO DB
-    console.log('*********** Inside of /register');
-    console.log('*****req.body');
-    console.log(req.body);
+    // console.log('*********** Inside of /register');
+    // console.log('*****req.body');
+    // console.log(req.body);
 
     db.User.findOne({ email: req.body.email })
     .then(user => {
@@ -38,7 +38,7 @@ const register = ( req, res) =>{
                 if (err) throw Error;
 
                 bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if(err) console.log('**** error inside of hash', err);
+                    // if(err) console.log('**** error inside of hash', err);
                     //change the password in new user through the hash
                     newUser.password = hash;
                     newUser.save()
@@ -89,14 +89,50 @@ const login = async (req, res) => {
         return res.status(400).json({message: 'user not found'});
     }
 }
-// private
-const profile = (req, res) => {
-    console.log('********* inside /profile');
-    console.log(req.body);
-    console.log(req.user);
+
+const profile = async (req, res) => {
+    
     const { id, name, email } = req.user;
-    res.json({ id, name, email });
+    console.log('I am here')
+   
+
+    const user = await db.User.findById(id) 
+    const petIds = user.favPets
+    console.log('This is my pet Ids', petIds)
+    const array = []
+    petIds.forEach(petId => {
+        const pet = db.Pet.findById(petId)
+        array.push(pet)
+    });
+
+
+    
+    res.json({ id, name, email, pets : array});
+
 }
+const getMyPets = async (req, res) => {
+    console.log('I am here')
+    const userId = req.body.id
+    console.log(req.body.id)
+    const user = await db.User.findById(userId) 
+    const petIds = user.favPets
+    console.log('This is my pet Ids', petIds)
+    const array = []
+    petIds.forEach(petId => {
+        const pet = db.Pet.findById(petId)
+        array.push(pet)
+    });
+    
+}
+
+const save = async (req, res) => {
+    const petId = req.body.id
+    const pet = await db.Pet.findById(petId)
+    const user = await db.User.findByIdAndUpdate(req.body.userId, 
+        { $addToSet: { favPets: petId } }
+    )
+    res.send("All Pets")
+} 
 
 // exports
 module.exports = {
@@ -104,4 +140,7 @@ module.exports = {
     register,
     login,
     profile,
+    save,
+    getMyPets,
 }
+ 

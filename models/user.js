@@ -18,9 +18,14 @@ const userSchema = new Schema({
     date: {
         type: Date,
         default: Date.now()
-    }
+    },
+    favPets: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Pet'
+    }]
 })
 
 const User = mongoose.model('User', userSchema);
+
 
 module.exports = User;
