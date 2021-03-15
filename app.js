@@ -57,7 +57,7 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
     .then(async response =>  {
 // run function
       //add each objects information
-     console.log("********", response.data)
+    //  console.log("********", response.data)
       const newPets = await response.data.animals.map((animalObject) => {
         const { name, type, species, gender, age, photos, contact } = animalObject;
        const resultObj = {
@@ -73,7 +73,7 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
       return resultObj
     });
       const allNewPets = await db.Pet.create(newPets);
-      console.log(allNewPets)
+      // console.log(allNewPets)
       res.send(allNewPets)
           //email: response.animals.contact.email
     })
@@ -84,7 +84,7 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
 })
 
 app.post('/api/search', async (req, res) => {
-  console.log('I am here')
+ 
   let buff = new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`);
   // console.log(req.body, 'this is my body')
   const {type, postalcode} = req.body

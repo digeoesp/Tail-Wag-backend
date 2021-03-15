@@ -7,7 +7,7 @@ const test = (req, res) => {
 
 const index = (req, res) => {
     // Purpose: Fetch all Capsules from DB and return
-    console.log('=====> Inside GET controllers/pet');
+    // console.log('=====> Inside GET controllers/pet');
 
     db.Pet.find({}, (err, foundPets) => {
         if (err) console.log('Error in pets#index:', err);

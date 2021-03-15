@@ -33,7 +33,7 @@ const register = ( req, res) =>{
                 email: req.body.email,
                 password: req.body.password
             });
-
+console.log(newUser)
             bcrypt.genSalt(10, (err, salt) => {
                 if (err) throw Error;
 
@@ -91,45 +91,38 @@ const login = async (req, res) => {
 }
 
 const profile = async (req, res) => {
-    
     const { id, name, email } = req.user;
-    console.log('I am here')
-   
-
+    
     const user = await db.User.findById(id) 
     const petIds = user.favPets
-    console.log('This is my pet Ids', petIds)
+    
     const array = []
     petIds.forEach(petId => {
         const pet = db.Pet.findById(petId)
         array.push(pet)
     });
-
-
-    
     res.json({ id, name, email, pets : array});
-
 }
 const getMyPets = async (req, res) => {
-    console.log('I am here')
+    
     const userId = req.body.id
-    console.log(req.body.id)
     const user = await db.User.findById(userId) 
     const petIds = user.favPets
-    console.log('This is my pet Ids', petIds)
+    
     const array = []
     petIds.forEach(petId => {
         const pet = db.Pet.findById(petId)
         array.push(pet)
     });
-    
 }
 
 const save = async (req, res) => {
-    const petId = req.body.id
-    const pet = await db.Pet.findById(petId)
+    // const petId = req.body.id
+    console.log(req.body)
+    const pet = await db.Pet.findById(req.body.id)
+  
     const user = await db.User.findByIdAndUpdate(req.body.userId, 
-        { $addToSet: { favPets: petId } }
+        { $addToSet: { favPets: req.body.id } }
     )
     res.send("All Pets")
 } 
