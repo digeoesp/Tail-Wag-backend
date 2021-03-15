@@ -15,13 +15,13 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
     } 
 })
 .then((response)=>{                    
-    console.log(response.data);
+    // console.log(response.data);
     const  { token_type, access_token } = response.data;
     axios.get(`https://api.petfinder.com/v2/animals/`, {
         headers: { Authorization: `${token_type} ${access_token}`}
     })
     .then(response =>  {
-        console.log(response.data);
+        // console.log(response.data);
     })
     .catch(error => console.log(error))
 })

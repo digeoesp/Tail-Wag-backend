@@ -86,7 +86,7 @@ axios.post('https://api.petfinder.com/v2/oauth2/token',
 app.post('/api/search', async (req, res) => {
   console.log('I am here')
   let buff = new Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`);
-  console.log(req.body, 'this is my body')
+  // console.log(req.body, 'this is my body')
   const {type, postalcode} = req.body
 let authKey = buff.toString('base64');// changes key to string
 axios.post(`https://api.petfinder.com/v2/oauth2/token`, 
@@ -132,6 +132,10 @@ axios.post(`https://api.petfinder.com/v2/oauth2/token`,
 
 })
 
+// app.get('/profile/:id', async (req, res) => {
+//   const userId = req.query.id 
+//   const user= await
+// })
 
 
 
