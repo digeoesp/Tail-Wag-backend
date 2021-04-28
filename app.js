@@ -142,7 +142,6 @@ axios.post(`https://api.petfinder.com/v2/oauth2/token`,
 
 // Server
 const server = app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}`));
-
 module.exports = server;
 
 
